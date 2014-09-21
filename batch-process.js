@@ -137,15 +137,19 @@ function Process( spec ) {
         if( reportInterval ) clearInterval(reportInterval);
 
         // TODO: need an 'error' emit as well
+
+        var now = Date.now()
+
         self.emit('report',{
-          name:   spec.name,
-          procid: self.procid,
-          spec:   spec,
-          error:  err,
-          start:  start,
-          now:    Date.now(),
-          stdout: capture_stdout.get(),
-          stderr: capture_stderr.get(),
+          name:        spec.name,
+          procid:      self.procid,
+          spec:        spec,
+          error:       err,
+          start:       start,
+          now:         now,
+          duration:    now-start,
+          stdout:      capture_stdout.get(),
+          stderr:      capture_stderr.get(),
           stdout_size: capture_stdout.count,
           stderr_size: capture_stderr.count,
         })
@@ -156,23 +160,22 @@ function Process( spec ) {
         if( reportInterval ) clearInterval(reportInterval);
 
         var timeout = 'timeout' == self.status
-
-        //proc.stdout.flush()
-        //proc.stderr.flush()
+        var now = Date.now()
 
         self.status = 'finished'
         self.emit('report',{
-          name:    spec.name,
-          procid:  self.procid,
-          spec:    spec,
-          code:    code,
-          signal:  signal,
-          final:   true,
-          timeout: timeout,
-          start:   start,
-          now:     Date.now(),
-          stdout:  capture_stdout.get(),
-          stderr:  capture_stderr.get(),
+          name:        spec.name,
+          procid:      self.procid,
+          spec:        spec,
+          code:        code,
+          signal:      signal || self.kill_signal,
+          final:       true,
+          timeout:     timeout,
+          start:       start,
+          now:         now,
+          duration:    now-start,
+          stdout:      capture_stdout.get(),
+          stderr:      capture_stderr.get(),
           stdout_size: capture_stdout.count,
           stderr_size: capture_stderr.count,
         })
@@ -182,14 +185,18 @@ function Process( spec ) {
         reportInterval = setInterval(function(){
 
           if( 'running' == self.status ) {
+
+            var now = Date.now()
+
             self.emit('report',{
-              name:   spec.name,
-              procid: self.procid,
-              spec:   spec,
-              start:  start,
-              now:    Date.now(),
-              stdout: capture_stdout.get(),
-              stderr: capture_stderr.get(),
+              name:        spec.name,
+              procid:      self.procid,
+              spec:        spec,
+              start:       start,
+              now:         now,
+              duration:    now-start,
+              stdout:      capture_stdout.get(),
+              stderr:      capture_stderr.get(),
               stdout_size: capture_stdout.count,
               stderr_size: capture_stderr.count,
             })
@@ -203,6 +210,7 @@ function Process( spec ) {
         processTimeout = setTimeout(function(){
           if( 'running' == self.status ) {
             self.status = 'timeout'
+            self.kill_signal = spec.kill_signal
             proc.kill(spec.kill_signal)
           }
         },spec.timeout)
