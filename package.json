@@ -1,0 +1,36 @@
+{
+  "name": "batch-process",
+  "version": "0.1.0",
+  "description": "Node.js module for controlled batch processing, including log capture.",
+  "main": "batch-process.js",
+  "scripts": {
+    "test": "./node_modules/.bin/mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rjrodger/batch-process.git"
+  },
+  "keywords": [
+    "batch",
+    "process",
+    "run",
+    "shell",
+    "command"
+  ],
+  "author": "Richard Rodger (http://richardrodger.com)",
+  "license": "MIT",
+  "dependencies": {
+    "eraro": "^0.1.6",
+    "mkdirp": "^0.5.0",
+    "nid": "^0.3.2",
+    "underscore": "~1.6.0"
+  },
+  "devDependencies": {
+    "mocha": "~1.20.1"
+  },
+  "files": [
+    "README.md",
+    "LICENSE.txt",
+    "batch-process.js"
+  ]
+}
